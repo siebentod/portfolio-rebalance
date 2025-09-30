@@ -1,6 +1,6 @@
 export function formatNumber(
   value: number | string,
-  separator: string = ' ',
+  separator: string = ' ',
   decimalSeparator: string = '.'
 ): string {
   // Конвертируем в число
