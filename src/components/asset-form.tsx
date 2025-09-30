@@ -86,7 +86,7 @@ export default function AssetForm({
     control: assetControl,
     handleSubmit: handleAssetSubmit,
     formState: { errors: assetErrors },
-    setValue: setAssetValue,
+    // setValue: setAssetValue,
     reset: resetAssetForm,
   } = useForm<AssetFormData>({
     resolver: zodResolver(assetSchema),
