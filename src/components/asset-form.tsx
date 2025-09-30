@@ -275,20 +275,20 @@ export default function AssetForm({
         <div className='flex justify-between'>
           <button
             onClick={handleAssetSubmit(onAssetFormSubmit)}
-            className='px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors cursor-pointer mr-2'
+            className='leading-tight px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors cursor-pointer mr-2'
           >
             Создать
           </button>
           <div className='flex gap-x-2'>
             <button
               onClick={handleToggleSumForm}
-              className='px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-muted transition-colors cursor-pointer'
+              className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-muted transition-colors cursor-pointer'
             >
               {sumToAdd === 0 ? 'Добавить сумму' : 'Изменить добавленную сумму'}
             </button>
             <button
               onClick={() => toast('Yet to be done...')}
-              className='px-4 py-2 bg-secondary text-muted-foreground rounded-md transition-colors cursor-pointer'
+              className='leading-tight px-4 py-2 bg-secondary text-muted-foreground rounded-md transition-colors cursor-pointer'
             >
               {'Снять сумму'}
             </button>
