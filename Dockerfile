@@ -1,5 +1,5 @@
-# Этап сборки
-FROM node:18 AS builder
+# Используйте Node.js 20 вместо 18
+FROM node:20 AS builder
 WORKDIR /app
 
 # Копируем файлы зависимостей
@@ -11,7 +11,7 @@ RUN npm ci --legacy-peer-deps
 # Копируем исходный код
 COPY . .
 
-# Собираем приложение (Vite создаст папку dist)
+# Собираем приложение
 RUN npm run build
 
 # Продакшн-образ с nginx
