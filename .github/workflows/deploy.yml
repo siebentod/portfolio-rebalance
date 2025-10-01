@@ -1,0 +1,61 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  # PROJECT_NAME: ${{ github.event.repository.name }}
+  PROJECT_NAME: 'portfolio-rebalance3004'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker image
+      run: |
+        echo "🏗️ Собираем Docker образ для $PROJECT_NAME..."
+        docker build -t $PROJECT_NAME:latest .
+        docker save -o $PROJECT_NAME.tar $PROJECT_NAME:latest
+        gzip $PROJECT_NAME.tar
+        echo "✅ Образ собран и сжат"
+      
+    - name: Fix permissions for tar.gz
+      run: chmod 644 ${{ env.PROJECT_NAME }}.tar.gz
+
+    - name: Copy Docker image to server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: "${{ env.PROJECT_NAME }}.tar.gz"
+        target: "/home/deploy/projects/${{ env.PROJECT_NAME }}/docker-images/"
+
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd /home/deploy/projects/${{ env.PROJECT_NAME }}
+          ./deploy.sh
+
+    - name: Notify deployment result
+      if: always()
+      run: |
+        if [ ${{ job.status }} == 'success' ]; then
+          echo "✅ Деплой $PROJECT_NAME успешно завершен"
+        else
+          echo "❌ Ошибка деплоя $PROJECT_NAME"
+        fi
