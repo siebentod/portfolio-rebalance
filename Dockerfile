@@ -1,4 +1,4 @@
-FROM node:18-alpine AS builder
+FROM node:18 AS builder
 WORKDIR /app
 
 # Устанавливаем зависимости
@@ -20,7 +20,7 @@ COPY package*.json ./
 RUN npm ci --only=production  --legacy-peer-deps
 
 # Копируем необходимые файлы из образа builder
-COPY --from=builder /public ./public
+# 
 
 # Если у вас есть дополнительные конфигурации, скопируйте их
 # COPY --from=builder /app/некоторый-файл ./некоторый-файл
