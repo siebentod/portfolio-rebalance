@@ -1,36 +1,37 @@
+# Этап сборки
 FROM node:18 AS builder
 WORKDIR /app
 
-# Устанавливаем зависимости
+# Копируем файлы зависимостей
 COPY package*.json ./
+
+# Устанавливаем зависимости
 RUN npm ci --legacy-peer-deps
 
 # Копируем исходный код
 COPY . .
 
-# Собираем приложение
+# Собираем приложение (Vite создаст папку dist)
 RUN npm run build
 
-# Продакшн-образ
-FROM node:18-alpine AS runner
-WORKDIR /app
+# Продакшн-образ с nginx
+FROM nginx:alpine AS runner
 
-# Устанавливаем только production-зависимости
-COPY package*.json ./
-RUN npm ci --only=production  --legacy-peer-deps
+# Копируем собранное приложение из builder
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Копируем необходимые файлы из образа builder
-# 
-
-# Если у вас есть дополнительные конфигурации, скопируйте их
-# COPY --from=builder /app/некоторый-файл ./некоторый-файл
-
-# Устанавливаем переменные окружения
-ENV NODE_ENV production
-ENV PORT 3000
+# Копируем конфигурацию nginx для SPA
+RUN echo 'server { \
+    listen 80; \
+    location / { \
+        root /usr/share/nginx/html; \
+        index index.html index.htm; \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
 
 # Открываем порт
-EXPOSE 3000
+EXPOSE 80
 
-# Запускаем Next.js
-CMD ["npm", "run", "start"]
+# Запускаем nginx
+CMD ["nginx", "-g", "daemon off;"]
