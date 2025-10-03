@@ -2,7 +2,6 @@ import { FaGithub, FaHome, FaInfo } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 function LinksIcons({
-  color = 'text-white',
   noabout = false,
   home = false,
 }) {
