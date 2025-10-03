@@ -33,7 +33,7 @@ export default function PortfolioTable({
   if (assets.length === 0) {
     return (
       <motion.div
-        className='mx-auto w-max text-center py-4 px-10 border border-border/30 rounded-xl bg-grayLight/30 text-muted-foreground'
+        className='mx-auto max-w-max text-center py-4 px-10 border border-border/30 rounded-xl bg-grayLight/30 text-muted-foreground'
         {...onlyOpacityMotion}
       >
         <div className='text-6xl mt-2 mb-3 mx-auto flex justify-center'>
