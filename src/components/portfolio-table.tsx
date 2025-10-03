@@ -2,7 +2,8 @@
 import ArrowUp from '../assets/arrow-up.svg?react';
 import image2 from '/image2.webp';
 import { formatNumber } from '../lib/format-number';
-// import image from '/image.webp';
+import { motion } from 'framer-motion';
+import { onlyOpacityMotion } from '../lib/motion';
 
 interface Asset {
   id: string;
@@ -31,13 +32,16 @@ export default function PortfolioTable({
 }: PortfolioTableProps) {
   if (assets.length === 0) {
     return (
-      <div className='text-center py-6 text-muted-foreground'>
-        <div className='text-6xl mb-4 mx-auto flex justify-center'>
+      <motion.div
+        className='mx-auto w-max text-center py-4 px-10 border border-border/30 rounded-xl bg-grayLight/30 text-muted-foreground'
+        {...onlyOpacityMotion}
+      >
+        <div className='text-6xl mt-2 mb-3 mx-auto flex justify-center'>
           <img src={image2} className='w-24' />
         </div>
-        <h3 className='text-xl mb-2'>Добавьте активы в портфель</h3>
+        <h3 className='text-xl mb-1'>Добавьте активы в портфель</h3>
         <p>Начните с добавления ваших инвестиционных активов выше</p>
-      </div>
+      </motion.div>
     );
   }
 
@@ -103,7 +107,9 @@ export default function PortfolioTable({
                       step='1'
                     />
                   </td>
-                  <td className='py-2 px-1 text-center'>{formatNumber(value)}</td>
+                  <td className='py-2 px-1 text-center'>
+                    {formatNumber(value)}
+                  </td>
                   <td className='py-2 px-1 text-center'>
                     <span
                       className={`flex justify-center items-center ${
@@ -156,7 +162,8 @@ export default function PortfolioTable({
         </table>
       </div>
       <div className='mt-4 text-lg font-semibold'>
-        Общая стоимость портфеля: {formatNumber(totalValue)}</div>
+        Общая стоимость портфеля: {formatNumber(totalValue)}
+      </div>
       <div className='mt-2 text-sm text-muted-foreground'>
         Сумма целевых процентов:{' '}
         {assets

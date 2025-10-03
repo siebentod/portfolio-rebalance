@@ -4,8 +4,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Modal from './modal';
 import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
-import { containerVariants, itemVariants, buttonVariants } from '../lib/motion';
 
 interface Asset {
   name: string;
@@ -20,7 +18,6 @@ interface AssetFormProps {
   onAddAsset: () => void;
   onAddSum: (sum: number) => void;
   sumToAdd: number;
-  hasAssets: boolean;
 }
 
 const assetSchema = z.object({
@@ -79,16 +76,13 @@ export default function AssetForm({
   onAddAsset,
   onAddSum,
   sumToAdd,
-  hasAssets,
 }: AssetFormProps) {
   const [addSumOpened, setAddSumOpened] = useState(false);
 
-  // Форма для активов
-  const {
+ const {
     control: assetControl,
     handleSubmit: handleAssetSubmit,
     formState: { errors: assetErrors },
-    // setValue: setAssetValue,
     reset: resetAssetForm,
   } = useForm<AssetFormData>({
     resolver: zodResolver(assetSchema),
@@ -120,20 +114,17 @@ export default function AssetForm({
     setAddSumOpened(!addSumOpened);
   };
 
-  const onAssetFormSubmit = useCallback(
-    (data: AssetFormData) => {
-      const normalizedData = {
-        name: data.name,
-        price: data.price.replace(',', '.'),
-        quantity: data.quantity.replace(',', '.'),
-        targetPercentage: data.targetPercentage.replace(',', '.'),
-      };
-      setNewAsset(normalizedData);
-      onAddAsset();
-      resetAssetForm();
-    },
-    [onAddAsset, resetAssetForm, setNewAsset]
-  );
+  const onAssetFormSubmit = useCallback((data: AssetFormData) => {
+    const normalizedData = {
+      name: data.name,
+      price: data.price.replace(',', '.'),
+      quantity: data.quantity.replace(',', '.'),
+      targetPercentage: data.targetPercentage.replace(',', '.'),
+    };
+    setNewAsset(normalizedData);
+    onAddAsset();
+    resetAssetForm();
+  }, [onAddAsset, resetAssetForm, setNewAsset]);
 
   const onSumFormSubmit = (data: SumFormData) => {
     const normalizedSum = parseFloat(data.sum.replace(',', '.'));
@@ -141,7 +132,6 @@ export default function AssetForm({
     onAddSum(normalizedSum);
   };
 
-  // Функция для фильтрации ввода только цифр, точки и запятой
   const filterNumericInput = (value: string): string => {
     let filtered = value.replace(/[^0-9.,]/g, '');
 
@@ -170,23 +160,9 @@ export default function AssetForm({
 
   return (
     <>
-      <motion.div
-        variants={containerVariants}
-        initial='hidden'
-        animate='visible'
-        className='bg-card border border-border rounded-lg p-6 mb-8 max-w-3xl'
-      >
-        <motion.h2
-          variants={itemVariants}
-          className='text-xl font-semibold mb-4'
-        >
-          Добавить актив
-        </motion.h2>
-
-        <motion.div
-          variants={itemVariants}
-          className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'
-        >
+      <div className='bg-card border border-border rounded-lg p-6 mb-8 max-w-3xl'>
+        <h2 className='text-xl font-semibold mb-4'>Добавить актив</h2>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
           <div>
             <Controller
               name='name'
@@ -285,40 +261,31 @@ export default function AssetForm({
               </p>
             )}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div variants={itemVariants} className='flex justify-between'>
-          <motion.button
-            variants={buttonVariants}
-            whileHover='hover'
-            whileTap='tap'
+        <div className='flex justify-between'>
+          <button
             onClick={handleAssetSubmit(onAssetFormSubmit)}
             className='leading-tight px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors cursor-pointer mr-2'
           >
             Создать
-          </motion.button>
-          {hasAssets && <div className='flex gap-x-2'>
-            <motion.button
-              variants={buttonVariants}
-              whileHover='hover'
-              whileTap='tap'
+          </button>
+          <div className='flex gap-x-2'>
+            <button
               onClick={handleToggleSumForm}
-              className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground/90 rounded-md hover:bg-muted transition-colors cursor-pointer'
+              className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-muted transition-colors cursor-pointer'
             >
               {sumToAdd === 0 ? 'Добавить сумму' : 'Изменить добавленную сумму'}
-            </motion.button>
-            <motion.button
-              variants={buttonVariants}
-              whileHover='hover'
-              whileTap='tap'
+            </button>
+            <button
               onClick={() => toast('Yet to be done...')}
-              className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground/40 rounded-md transition-colors cursor-pointer'
+              className='leading-tight px-4 py-2 bg-secondary text-muted-foreground rounded-md transition-colors cursor-pointer'
             >
               {'Снять сумму'}
-            </motion.button>
-          </div>}
-        </motion.div>
-      </motion.div>
+            </button>
+          </div>
+        </div>
+      </div>
 
       <Modal
         isOpen={addSumOpened}

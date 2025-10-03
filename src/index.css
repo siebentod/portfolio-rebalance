@@ -10,6 +10,7 @@ body {
   --color-foreground: oklch(0.145 0 0);
   --color-card: oklch(1 0 0);
   --color-primary: #005AE1;
+  --color-grayLight: #E6EFFC;
   --color-primary-foreground: oklch(0.985 0 0);
   --color-secondary: oklch(0.97 0 0);
   --color-secondary-foreground: oklch(0.205 0 0);

@@ -4,27 +4,15 @@ import PortfolioTable from './components/portfolio-table';
 import RebalanceOperations from './components/rebalance-operations';
 import toast, { Toaster } from 'react-hot-toast';
 import SumAndSumToAdd from './components/sum-and-sum-to-add';
-import Balancer from 'react-wrap-balancer';
-import { X } from 'lucide-react';
-
-interface Asset {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  targetPercentage: number;
-}
+import TopRightWindow from './components/top-right-window';
+import { type Asset, type SavedPortfolio } from './types';
+import Header from './components/header';
 
 interface RebalanceOperation {
   assetName: string;
   action: 'buy' | 'sell';
   quantity: number;
   value: number;
-}
-
-interface SavedPortfolio {
-  date: number;
-  assets: Asset[];
 }
 
 export default function PortfolioRebalancer() {
@@ -65,14 +53,6 @@ export default function PortfolioRebalancer() {
       toast.success('Портфель загружен');
       setSavedDataNotChanged(true);
     }
-  };
-
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
   };
 
   const addAsset = () => {
@@ -220,25 +200,26 @@ export default function PortfolioRebalancer() {
     0
   );
 
-  const showSaveButton = !savedDataNotChanged && !dontShowSaveButton &&
+  const showSaveButton =
+    !savedDataNotChanged &&
+    !dontShowSaveButton &&
     Math.abs(totalTargetPercentage - 100) < 0.01;
 
   return (
     <>
       <div className='min-h-screen bg-background text-foreground p-6'>
         <div className='max-w-2xl mx-auto'>
-          <h1 className='text-2xl font-bold mb-8 text-center leading-6'>
-            <Balancer>
-              Утилита для ребалансировки инвестиционного портфеля
-            </Balancer>
-          </h1>
+          <Header />
+
           <AssetForm
             newAsset={newAsset}
             setNewAsset={setNewAsset}
             onAddAsset={addAsset}
             onAddSum={addSum}
             sumToAdd={sumToAdd}
+            hasAssets={assets.length > 0}
           />
+
           {sumToAdd > 0 && (
             <SumAndSumToAdd
               sumToAdd={sumToAdd}
@@ -246,12 +227,14 @@ export default function PortfolioRebalancer() {
               totalValue={totalValue}
             />
           )}
+
           <PortfolioTable
             assets={assets}
             totalValue={totalValue}
             onUpdateAsset={updateAsset}
             onRemoveAsset={removeAsset}
           />
+
           <RebalanceOperations
             operations={operations}
             hasAssets={assets.length > 0}
@@ -260,47 +243,15 @@ export default function PortfolioRebalancer() {
         </div>
       </div>
 
-      {showLoadBox && savedPortfolio && (
-        <div className='fixed top-2 right-2 border border-border rounded-lg shadow-sm p-2 bg-background'>
-          <div className='flex items-start justify-between gap-2 mb-2'>
-            <span className='text-sm text-gray-700'>
-              <span className='ml-1'>Сохраненный портфель</span>
-            </span>
-            <button
-              onClick={() => setShowLoadBox(false)}
-              className='text-gray-500 hover:text-gray-700 transition-colors'
-            >
-              <X size={16} />
-            </button>
-          </div>
-          <button
-            onClick={loadFromLocalStorage}
-            className='px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md text-sm font-medium transition-colors w-full'
-          >
-            Загрузить ({formatDate(savedPortfolio.date)})
-          </button>
-        </div>
-      )}
-
-      {showSaveButton && (
-        <div
-          className='fixed top-2 right-2 border border-border rounded-lg shadow-sm p-1.5 pr-5 bg-background'
-          style={{ marginTop: showLoadBox ? '100px' : '0' }}
-        >
-          <button
-            onClick={saveToLocalStorage}
-            className='px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors relative'
-          >
-            Сохранить в браузере
-          </button>
-          <button
-            onClick={() => setDontShowSaveButton(true)}
-            className='text-gray-500 hover:text-gray-700 transition-colors absolute top-[2px] right-[3px]'
-          >
-            <X size={16} />
-          </button>
-        </div>
-      )}
+      <TopRightWindow
+        showSaveButton={showSaveButton}
+        showLoadBox={showLoadBox}
+        savedPortfolio={savedPortfolio}
+        saveToLocalStorage={saveToLocalStorage}
+        loadFromLocalStorage={loadFromLocalStorage}
+        setDontShowSaveButton={setDontShowSaveButton}
+        setShowLoadBox={setShowLoadBox}
+      />
 
       <Toaster
         position='top-center'
