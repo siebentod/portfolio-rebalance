@@ -1,0 +1,51 @@
+.collapsibleLabel {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.collapsibleLabel p {
+  margin-bottom: 10px;
+  display: inline;
+  user-select: none;
+  position: relative;
+}
+
+.collapsibleLabel p::before,
+.collapsibleLabel p::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(3) invert(1);
+  transition: transform 100ms ease;
+}
+
+.collapsibleLabel p::before {
+  margin-right: 1px;
+  background-image: url('../assets/chevron-right.svg');
+}
+
+.collapsibleLabel p::after {
+  margin-left: 1px;
+  background-image: url('../assets/chevron-left.svg');
+}
+
+.collapsibleLabel input:checked ~ p::before {
+  transform: rotate(90deg);
+}
+
+.collapsibleLabel input:checked ~ p::after {
+  transform: rotate(-90deg);
+}
+
+.collapsibleContent {
+  display: none;
+  margin: 0;
+  padding: 0;
+}
+
+.collapsibleLabel input:checked ~ .collapsibleContent {
+  display: block;
+}

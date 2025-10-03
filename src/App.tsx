@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import AssetForm from './components/asset-form';
 import PortfolioTable from './components/portfolio-table';
-import RebalanceOperations from './components/rebalance-operations';
+import RebalanceOperations from './components/operations';
 import toast, { Toaster } from 'react-hot-toast';
 import SumAndSumToAdd from './components/sum-and-sum-to-add';
 import TopRightWindow from './components/top-right-window';
