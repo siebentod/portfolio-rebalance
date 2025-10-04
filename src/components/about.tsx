@@ -36,9 +36,20 @@ export default function About() {
             <li className='list-none'>
               <label className={styles.collapsibleLabel}>
                 <input type='checkbox' className='hidden' />
-                <p className='text-primary'>Прямой номер</p>
+                <p className='text-primary'>Другое</p>
                 <ul className={styles.collapsibleContent}>
-                  <span className='text-gray-500 bg-[#f6f7f8] px-2.5 pb-0.5 rounded-lg'>4276 1300 1766 7498</span>
+                  <span className='text-gray-500 bg-[#f6f7f8] px-2.5 pb-0.5 rounded-lg block'>
+                    4276 1300 1766 7498
+                  </span>
+                  <span className='text-gray-500 bg-[#f6f7f8] px-2.5 pb-0.5 rounded-lg block'>
+                    BTC 1HyLFrJ11fgnRFYmvS2AkM6wteBYEXA9TC
+                  </span>
+                  <span className='text-gray-500 bg-[#f6f7f8] px-2.5 pb-0.5 rounded-lg block'>
+                    ETH 0x8395ecC76B70Ef80795dfe54bc5Af4F4b8F7db7b
+                  </span>
+                  <span className='text-gray-500 bg-[#f6f7f8] px-2.5 pb-0.5 rounded-lg block'>
+                    TON UQD7m56XTJpE3TFBGwP9SZqZmZwl6KPRRQ5JuApUlKmXjtlJ
+                  </span>
                 </ul>
               </label>
             </li>
