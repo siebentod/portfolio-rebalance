@@ -111,9 +111,27 @@ export default function PortfolioRebalancer() {
     field: keyof Asset,
     value: string | number
   ) => {
+    let newValue: string | number = value;
+    if (
+      field === 'quantity' ||
+      field === 'targetPercentage' ||
+      field === 'price'
+    ) {
+      if (typeof value === 'string') {
+        if (value.endsWith('.')) {
+          newValue = value;
+          console.log('newValue', newValue);
+        } else {
+          newValue = Number.parseFloat(value) || 0;
+        }
+      } else {
+        newValue = value;
+      }
+    }
+
     setAssets(
       assets.map((asset) =>
-        asset.id === id ? { ...asset, [field]: value } : asset
+        asset.id === id ? { ...asset, [field]: newValue } : asset
       )
     );
     setSavedDataNotChanged(false);

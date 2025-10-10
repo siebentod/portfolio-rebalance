@@ -6,6 +6,7 @@ import Modal from './modal';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { containerVariants, itemVariants, buttonVariants } from '../lib/motion';
+import { filterNumericInput } from '../lib/format-number';
 
 interface Asset {
   name: string;
@@ -139,21 +140,6 @@ export default function AssetForm({
     const normalizedSum = parseFloat(data.sum.replace(',', '.'));
     setAddSumOpened(false);
     onAddSum(normalizedSum);
-  };
-
-  // Функция для фильтрации ввода только цифр, точки и запятой
-  const filterNumericInput = (value: string): string => {
-    let filtered = value.replace(/[^0-9.,]/g, '');
-
-    filtered = filtered.replace(',', '.');
-
-    // Разрешаем только одну точку
-    const parts = filtered.split('.');
-    if (parts.length > 2) {
-      filtered = parts[0] + '.' + parts.slice(1).join('');
-    }
-
-    return filtered;
   };
 
   useEffect(() => {
@@ -297,26 +283,30 @@ export default function AssetForm({
           >
             Создать
           </motion.button>
-          {hasAssets && <div className='flex gap-x-2'>
-            <motion.button
-              variants={buttonVariants}
-              whileHover='hover'
-              whileTap='tap'
-              onClick={handleToggleSumForm}
-              className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground/90 rounded-md hover:bg-muted transition-colors cursor-pointer'
-            >
-              {sumToAdd === 0 ? 'Добавить сумму' : 'Изменить добавленную сумму'}
-            </motion.button>
-            <motion.button
-              variants={buttonVariants}
-              whileHover='hover'
-              whileTap='tap'
-              onClick={() => toast('Yet to be done...')}
-              className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground/40 rounded-md transition-colors cursor-pointer'
-            >
-              {'Снять сумму'}
-            </motion.button>
-          </div>}
+          {hasAssets && (
+            <div className='flex gap-x-2'>
+              <motion.button
+                variants={buttonVariants}
+                whileHover='hover'
+                whileTap='tap'
+                onClick={handleToggleSumForm}
+                className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground/90 rounded-md hover:bg-muted transition-colors cursor-pointer'
+              >
+                {sumToAdd === 0
+                  ? 'Добавить сумму'
+                  : 'Изменить добавленную сумму'}
+              </motion.button>
+              <motion.button
+                variants={buttonVariants}
+                whileHover='hover'
+                whileTap='tap'
+                onClick={() => toast('Yet to be done...')}
+                className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground/40 rounded-md transition-colors cursor-pointer'
+              >
+                {'Снять сумму'}
+              </motion.button>
+            </div>
+          )}
         </motion.div>
       </motion.div>
 

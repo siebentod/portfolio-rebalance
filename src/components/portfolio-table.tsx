@@ -1,7 +1,7 @@
 // @ts-expect-error syntax
 import ArrowUp from '../assets/arrow-up.svg?react';
 import image2 from '/image2.webp';
-import { formatNumber } from '../lib/format-number';
+import { filterNumericInput, formatNumber } from '../lib/format-number';
 import { motion } from 'framer-motion';
 import { onlyOpacityMotion } from '../lib/motion';
 
@@ -79,32 +79,32 @@ export default function PortfolioTable({
                   </td>
                   <td className='py-2 px-1 text-center'>
                     <input
-                      type='number'
+                      type='text'
                       value={asset.price}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const filtered = filterNumericInput(e.target.value);
                         onUpdateAsset(
                           asset.id,
                           'price',
-                          Number.parseFloat(e.target.value) || 0
-                        )
-                      }
+                          filtered
+                        );
+                      }}
                       className='w-20 px-2 py-1 border border-input rounded bg-background text-sm'
-                      step='0.01'
                     />
                   </td>
                   <td className='py-2 px-1 text-center'>
                     <input
-                      type='number'
+                      type='text'
                       value={asset.quantity}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const filtered = filterNumericInput(e.target.value);
                         onUpdateAsset(
                           asset.id,
                           'quantity',
-                          Number.parseFloat(e.target.value) || 0
-                        )
-                      }
+                          filtered
+                        );
+                      }}
                       className='w-20 px-2 py-1 border border-input rounded bg-background text-sm'
-                      step='1'
                     />
                   </td>
                   <td className='py-2 px-1 text-center'>
@@ -130,19 +130,17 @@ export default function PortfolioTable({
                   </td>
                   <td className='py-2 px-1 text-center'>
                     <input
-                      type='number'
+                      type='text'
                       value={asset.targetPercentage}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const filtered = filterNumericInput(e.target.value);
                         onUpdateAsset(
                           asset.id,
                           'targetPercentage',
-                          Number.parseFloat(e.target.value) || 0
-                        )
-                      }
-                      className='w-16 px-2 py-1 border border-input rounded bg-background text-sm'
-                      step='1'
-                      min='0'
-                      max='100'
+                          filtered
+                        );
+                      }}
+                      className='w-12 px-2 py-1 border border-input rounded bg-background text-sm'
                     />
                     %
                   </td>

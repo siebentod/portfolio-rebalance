@@ -1,3 +1,28 @@
+// Функция для фильтрации ввода только цифр, точки и запятой
+export const filterNumericInput = (value: string): string => {
+  let filtered = value.replace(/[^0-9.,]/g, '');
+
+  filtered = filtered.replace(',', '.');
+
+  const parts = filtered.split('.');
+  if (parts.length > 2) {
+    filtered = parts[0] + '.' + parts.slice(1).join('');
+  }
+
+  if (filtered.length > 0) {
+    const [integerPart, decimalPart] = filtered.split('.');
+
+    const cleanedInteger = integerPart.replace(/^0+/, '') || '0';
+
+    filtered =
+      decimalPart !== undefined
+        ? `${cleanedInteger}.${decimalPart}`
+        : cleanedInteger;
+  }
+
+  return filtered;
+};
+
 export function formatNumber(
   value: number | string,
   separator: string = ' ',
