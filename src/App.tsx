@@ -225,7 +225,7 @@ export default function PortfolioRebalancer() {
 
   return (
     <>
-      <div className='min-h-screen bg-background text-foreground p-6'>
+      <div className='min-h-screen bg-background text-foreground p-6 pb-3'>
         <div className='max-w-2xl mx-auto'>
           <Header />
 
