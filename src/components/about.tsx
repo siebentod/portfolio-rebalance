@@ -50,6 +50,9 @@ export default function About() {
                   <span className='text-gray-500 px-2.5 pb-0.5 rounded-lg block'>
                     TON UQD7m56XTJpE3TFBGwP9SZqZmZwl6KPRRQ5JuApUlKmXjtlJ
                   </span>
+                  <span className='text-gray-500 px-2.5 pb-0.5 rounded-lg block'>
+                    SOL 4QqAwhw7YrSspskV6QxLqLRXYg1NZGDc2k55eX19ddRx
+                  </span>
                 </ul>
               </label>
             </li>

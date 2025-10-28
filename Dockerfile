@@ -1,4 +1,3 @@
-# Используйте Node.js 20 вместо 18
 FROM node:20 AS builder
 WORKDIR /app
 

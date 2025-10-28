@@ -36,9 +36,10 @@ export default function PortfolioTable({
         className='mx-auto max-w-max text-center py-4 px-10 border border-border/30 rounded-xl bg-grayLight/30 text-muted-foreground'
         {...onlyOpacityMotion}
       >
-        <div className='text-6xl mt-2 mb-3 mx-auto flex justify-center'>
+        {/* <div className='text-6xl mt-2 mb-3 mx-auto flex justify-center'>
           <img src={image2} className='w-24' />
-        </div>
+        </div> */}
+         <div className="text-6xl mb-4">📊</div>
         <h3 className='text-xl mb-1'>Добавьте активы в портфель</h3>
         <p>Начните с добавления ваших инвестиционных активов выше</p>
       </motion.div>
