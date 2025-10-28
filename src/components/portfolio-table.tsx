@@ -1,6 +1,6 @@
 // @ts-expect-error syntax
 import ArrowUp from '../assets/arrow-up.svg?react';
-import image2 from '/image2.webp';
+// import image2 from '/image2.webp';
 import { filterNumericInput, formatNumber } from '../lib/format-number';
 import { motion } from 'framer-motion';
 import { onlyOpacityMotion } from '../lib/motion';
