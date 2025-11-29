@@ -13,9 +13,9 @@ function LinksIcons({
         </Link>
       ) : null}
       {noabout ? null : (
-        <Link to="/about">
+        <a href="https://gratia.apoliteia.ru/">
           <FaInfo />
-        </Link>
+        </a>
       )}
       <a href="https://github.com/siebentod/portfolio-rebalance">
         <FaGithub />
