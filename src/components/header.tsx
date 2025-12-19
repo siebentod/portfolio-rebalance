@@ -1,4 +1,3 @@
-import Balancer from 'react-wrap-balancer';
 import { motion } from 'framer-motion';
 import { onlyOpacityMotion } from '../lib/motion';
 
