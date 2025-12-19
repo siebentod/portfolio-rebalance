@@ -5,10 +5,10 @@ import { onlyOpacityMotion } from '../lib/motion';
 export default function Header() {
   return (
     <motion.h1
-      className='text-2xl font-bold mb-8 text-center leading-6'
+      className='text-2xl font-bold md:mb-8 mb-6 text-center leading-6'
       {...onlyOpacityMotion}
     >
-      <Balancer>Утилита для ребалансировки инвестиционного портфеля</Balancer>
+      Ребалансировка портфеля
     </motion.h1>
   );
 }
