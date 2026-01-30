@@ -1,7 +1,9 @@
 @import 'tailwindcss';
+@import './assets/fonts/carlito.css';
+@import './assets/fonts/spectral.css';
 
 body {
-  font-family: "PT Serif", serif;
+  font-family: "carlito", serif;
   font-optical-sizing: auto;
 }
 
