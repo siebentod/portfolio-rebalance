@@ -1,4 +1,4 @@
-import { FaGithub, FaHome, FaInfo } from 'react-icons/fa';
+import { FaHome } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 function LinksIcons({
@@ -6,19 +6,19 @@ function LinksIcons({
   home = false,
 }) {
   return (
-    <div className={`mt-3 mx-auto text-center w-max text-primary flex gap-1 icons`}>
+    <div className={`mt-3 mx-auto text-center w-max flex gap-1 icons`}>
       {home ? (
         <Link to="/">
           <FaHome />
         </Link>
       ) : null}
       {noabout ? null : (
-        <a href="https://gratia.apoliteia.ru/">
-          <FaInfo />
+        <a href="https://gratia.apoliteia.ru/" className=' text-primary'>
+          Благодарность
         </a>
-      )}
-      <a href="https://github.com/siebentod/portfolio-rebalance">
-        <FaGithub />
+      )}|
+      <a href="https://github.com/siebentod/portfolio-rebalance" className=' text-primary'>
+        Github
       </a>
     </div>
   );

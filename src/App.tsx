@@ -23,7 +23,7 @@ export default function PortfolioRebalancer() {
     quantity: '',
     targetPercentage: '',
   });
-  const [sumToAdd, setSumToAdd] = useState(0);
+  const [sumAdjustment, setSumAdjustment] = useState(0);
   const [savedPortfolio, setSavedPortfolio] = useState<SavedPortfolio | null>(
     null
   );
@@ -96,8 +96,8 @@ export default function PortfolioRebalancer() {
     setSavedDataNotChanged(false);
   };
 
-  const addSum = (sum: number) => {
-    setSumToAdd(sum);
+  const setSumAdjustmentValue = (sum: number) => {
+    setSumAdjustment(sum);
     setSavedDataNotChanged(false);
   };
 
@@ -164,7 +164,7 @@ export default function PortfolioRebalancer() {
       0
     );
 
-    const newTotalValue = currentTotalValue + sumToAdd;
+    const newTotalValue = currentTotalValue + sumAdjustment;
 
     const totalTargetPercentage = assets.reduce(
       (sum, asset) => sum + asset.targetPercentage,
@@ -252,15 +252,15 @@ export default function PortfolioRebalancer() {
             newAsset={newAsset}
             setNewAsset={setNewAsset}
             onAddAsset={addAsset}
-            onAddSum={addSum}
-            sumToAdd={sumToAdd}
+            onSetSumAdjustment={setSumAdjustmentValue}
+            sumAdjustment={sumAdjustment}
             hasAssets={assets.length > 0}
           />
 
-          {sumToAdd > 0 && (
+          {sumAdjustment !== 0 && (
             <SumAndSumToAdd
-              sumToAdd={sumToAdd}
-              setSumToAdd={setSumToAdd}
+              sumAdjustment={sumAdjustment}
+              setSumAdjustment={setSumAdjustment}
               totalValue={totalValue}
             />
           )}

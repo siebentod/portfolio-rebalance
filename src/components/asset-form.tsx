@@ -3,7 +3,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Modal from './modal';
-import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { containerVariants, itemVariants, buttonVariants } from '../lib/motion';
 import { filterNumericInput } from '../lib/format-number';
@@ -19,8 +18,8 @@ interface AssetFormProps {
   newAsset: Asset;
   setNewAsset: (asset: Asset) => void;
   onAddAsset: () => void;
-  onAddSum: (sum: number) => void;
-  sumToAdd: number;
+  onSetSumAdjustment: (sum: number) => void;
+  sumAdjustment: number;
   hasAssets: boolean;
 }
 
@@ -65,9 +64,9 @@ const sumSchema = z.object({
     .refine(
       (val) => {
         const num = parseFloat(val.replace(',', '.'));
-        return !isNaN(num) && num > 0;
+        return !isNaN(num) && num !== 0;
       },
-      { message: 'Сумма должна быть больше 0' }
+      { message: 'Сумма должна быть не равна 0' }
     ),
 });
 
@@ -78,11 +77,12 @@ export default function AssetForm({
   newAsset,
   setNewAsset,
   onAddAsset,
-  onAddSum,
-  sumToAdd,
+  onSetSumAdjustment,
+  sumAdjustment,
   hasAssets,
 }: AssetFormProps) {
   const [addSumOpened, setAddSumOpened] = useState(false);
+  const [withdrawSumOpened, setWithdrawSumOpened] = useState(false);
 
   // Форма для активов
   const {
@@ -109,16 +109,31 @@ export default function AssetForm({
   } = useForm<SumFormData>({
     resolver: zodResolver(sumSchema),
     defaultValues: {
-      sum: sumToAdd ? sumToAdd.toString() : '',
+      sum: sumAdjustment > 0 ? sumAdjustment.toString() : '',
+    },
+  });
+
+  const {
+    control: withdrawControl,
+    handleSubmit: handleWithdrawSubmit,
+    formState: { errors: withdrawErrors },
+  } = useForm<SumFormData>({
+    resolver: zodResolver(sumSchema),
+    defaultValues: {
+      sum: '',
     },
   });
 
   useEffect(() => {
-    setSumValue('sum', sumToAdd ? sumToAdd.toString() : '');
-  }, [sumToAdd, setSumValue]);
+    setSumValue('sum', sumAdjustment > 0 ? sumAdjustment.toString() : '');
+  }, [sumAdjustment, setSumValue]);
 
   const handleToggleSumForm = () => {
     setAddSumOpened(!addSumOpened);
+  };
+
+  const handleToggleWithdrawForm = () => {
+    setWithdrawSumOpened(!withdrawSumOpened);
   };
 
   const onAssetFormSubmit = useCallback(
@@ -139,12 +154,18 @@ export default function AssetForm({
   const onSumFormSubmit = (data: SumFormData) => {
     const normalizedSum = parseFloat(data.sum.replace(',', '.'));
     setAddSumOpened(false);
-    onAddSum(normalizedSum);
+    onSetSumAdjustment(normalizedSum);
+  };
+
+  const onWithdrawFormSubmit = (data: SumFormData) => {
+    const normalizedSum = -Math.abs(parseFloat(data.sum.replace(',', '.'))); // Всегда отрицательное
+    setWithdrawSumOpened(false);
+    onSetSumAdjustment(normalizedSum);
   };
 
   useEffect(() => {
     const handleEnterPress = (event: KeyboardEvent) => {
-      if (event.key === 'Enter' && !addSumOpened) {
+      if (event.key === 'Enter' && !addSumOpened && !withdrawSumOpened) {
         handleAssetSubmit(onAssetFormSubmit)();
       }
     };
@@ -283,7 +304,7 @@ export default function AssetForm({
           >
             Создать
           </motion.button>
-          {hasAssets && (
+          {hasAssets && sumAdjustment === 0 && (
             <div className='flex gap-x-2'>
               <motion.button
                 variants={buttonVariants}
@@ -292,16 +313,18 @@ export default function AssetForm({
                 onClick={handleToggleSumForm}
                 className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground/90 rounded-md hover:bg-muted transition-colors cursor-pointer'
               >
-                {sumToAdd === 0
+                {sumAdjustment === 0
                   ? 'Добавить сумму'
-                  : 'Изменить добавленную сумму'}
+                  : sumAdjustment > 0
+                  ? 'Изменить добавленную сумму'
+                  : 'Изменить снятую сумму'}
               </motion.button>
               <motion.button
                 variants={buttonVariants}
                 whileHover='hover'
                 whileTap='tap'
-                onClick={() => toast('Yet to be done...')}
-                className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground/40 rounded-md transition-colors cursor-pointer'
+                onClick={handleToggleWithdrawForm}
+                className='leading-tight px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-muted transition-colors cursor-pointer'
               >
                 {'Снять сумму'}
               </motion.button>
@@ -336,6 +359,37 @@ export default function AssetForm({
           {sumErrors.sum && (
             <p className='text-red-500 text-sm mt-1 text-center'>
               {sumErrors.sum.message}
+            </p>
+          )}
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={withdrawSumOpened}
+        onClose={handleToggleWithdrawForm}
+        title='Снять сумму'
+        action={handleWithdrawSubmit(onWithdrawFormSubmit)}
+      >
+        <div>
+          <Controller
+            name='sum'
+            control={withdrawControl}
+            render={({ field }) => (
+              <input
+                {...field}
+                type='text'
+                placeholder='Введите сумму для снятия'
+                className='block mx-auto px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring'
+                onChange={(e) => {
+                  const filtered = filterNumericInput(e.target.value);
+                  field.onChange(filtered);
+                }}
+              />
+            )}
+          />
+          {withdrawErrors.sum && (
+            <p className='text-red-500 text-sm mt-1 text-center'>
+              {withdrawErrors.sum.message}
             </p>
           )}
         </div>
