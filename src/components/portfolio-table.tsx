@@ -76,7 +76,14 @@ export default function PortfolioTable({
               return (
                 <tr key={asset.id} className='border-b border-border'>
                   <td className='py-2 px-1 font-medium text-center'>
-                    {asset.name}
+                    <input
+                      type='text'
+                      value={asset.name}
+                      onChange={(e) =>
+                        onUpdateAsset(asset.id, 'name', e.target.value)
+                      }
+                      className='w-full px-2 py-1 border border-input rounded bg-background text-sm text-center'
+                    />
                   </td>
                   <td className='py-2 px-1 text-center'>
                     <input

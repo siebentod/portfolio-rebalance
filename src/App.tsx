@@ -112,7 +112,26 @@ export default function PortfolioRebalancer() {
     value: string | number
   ) => {
     let newValue: string | number = value;
-    if (
+
+    if (field === 'name') {
+      // Валидация названия актива
+      const trimmedName = String(value).trim();
+      if (!trimmedName) {
+        toast.error('Название актива не может быть пустым');
+        return;
+      }
+
+      // Проверка уникальности названий (без учета регистра)
+      const isDuplicate = assets.some(asset =>
+        asset.id !== id && asset.name.toLowerCase() === trimmedName.toLowerCase()
+      );
+      if (isDuplicate) {
+        toast.error('Актив с таким названием уже существует');
+        return;
+      }
+
+      newValue = trimmedName;
+    } else if (
       field === 'quantity' ||
       field === 'targetPercentage' ||
       field === 'price'
@@ -204,7 +223,7 @@ export default function PortfolioRebalancer() {
       'portfolioAssets',
       JSON.stringify({ date: Date.now(), assets: [...rebalancedAssets] })
     );
-    toast.success('Портфель сохранен в браузере');
+    toast.success('Ребалансированный портфель сохранен в браузере');
     setSavedDataNotChanged(true);
   };
 
