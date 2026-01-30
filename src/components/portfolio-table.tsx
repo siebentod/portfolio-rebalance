@@ -82,7 +82,7 @@ export default function PortfolioTable({
                       onChange={(e) =>
                         onUpdateAsset(asset.id, 'name', e.target.value)
                       }
-                      className='w-full px-2 py-1 border border-input rounded bg-background text-sm text-center'
+                      className='w-full min-w-30 px-2 py-1 border border-input rounded bg-background text-sm text-center'
                     />
                   </td>
                   <td className='py-2 px-1 text-center'>
