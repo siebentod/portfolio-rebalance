@@ -7,6 +7,7 @@ interface ModalProps {
   title: string;
   children: ReactNode;
   action?: () => void;
+  actionTitle?: string;
   noButtons?: boolean;
   closingCross?: boolean;
 }
@@ -17,6 +18,7 @@ export default function Modal({
   title,
   children,
   action,
+  actionTitle = "Сохранить",
   noButtons = false,
   closingCross = true,
 }: ModalProps) {
@@ -79,7 +81,7 @@ export default function Modal({
                   className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 w-[100px] cursor-pointer"
                   onClick={action}
                 >
-                  Да
+                  {actionTitle}
                 </button>
                 <button
                   onClick={onClose}

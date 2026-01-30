@@ -338,6 +338,7 @@ export default function AssetForm({
         onClose={handleToggleSumForm}
         title='Добавить сумму'
         action={handleSumSubmit(onSumFormSubmit)}
+        actionTitle='Добавить'
       >
         <div>
           <Controller
@@ -369,6 +370,7 @@ export default function AssetForm({
         onClose={handleToggleWithdrawForm}
         title='Снять сумму'
         action={handleWithdrawSubmit(onWithdrawFormSubmit)}
+        actionTitle='Снять'
       >
         <div>
           <Controller
