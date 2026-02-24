@@ -1,9 +1,9 @@
 export interface Asset {
   id: string;
   name: string;
-  price: number;
-  quantity: number;
-  targetPercentage: number;
+  price: number | string;
+  quantity: number | string;
+  targetPercentage: number | string;
 }
 
 export interface SavedPortfolio {

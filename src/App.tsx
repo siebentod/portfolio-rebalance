@@ -7,6 +7,7 @@ import SumAndSumToAdd from './components/sum-and-sum-to-add';
 import TopRightWindow from './components/top-right-window';
 import { type Asset, type SavedPortfolio } from './types';
 import Header from './components/header';
+import { getNumericPrice, getNumericQuantity, getNumericTargetPercentage } from './lib/asset-utils';
 
 interface RebalanceOperation {
   assetName: string;
@@ -137,9 +138,20 @@ export default function PortfolioRebalancer() {
       field === 'price'
     ) {
       if (typeof value === 'string') {
+        // Если строка заканчивается на точку, оставляем как есть для продолжения ввода
         if (value.endsWith('.')) {
           newValue = value;
-          console.log('newValue', newValue);
+        } else if (value === '' || value === '.') {
+          // Обработка пустой строки или только точки
+          newValue = value;
+        } else if (value.includes('.')) {
+          // Если есть точка, сохраняем как строку чтобы сохранить конечные нули
+          const num = Number.parseFloat(value);
+          if (!isNaN(num)) {
+            newValue = value;
+          } else {
+            newValue = 0;
+          }
         } else {
           newValue = Number.parseFloat(value) || 0;
         }
@@ -160,14 +172,14 @@ export default function PortfolioRebalancer() {
     if (assets.length === 0) return [];
 
     const currentTotalValue = assets.reduce(
-      (sum, asset) => sum + asset.price * asset.quantity,
+      (sum, asset) => sum + getNumericPrice(asset) * getNumericQuantity(asset),
       0
     );
 
     const newTotalValue = currentTotalValue + sumAdjustment;
 
     const totalTargetPercentage = assets.reduce(
-      (sum, asset) => sum + asset.targetPercentage,
+      (sum, asset) => sum + getNumericTargetPercentage(asset),
       0
     );
 
@@ -178,12 +190,12 @@ export default function PortfolioRebalancer() {
     const operations: RebalanceOperation[] = [];
 
     assets.forEach((asset) => {
-      const currentValue = asset.price * asset.quantity;
-      const targetValue = (newTotalValue * asset.targetPercentage) / 100;
+      const currentValue = getNumericPrice(asset) * getNumericQuantity(asset);
+      const targetValue = (newTotalValue * getNumericTargetPercentage(asset)) / 100;
       const difference = targetValue - currentValue;
 
       if (Math.abs(difference) > 0.01) {
-        const quantityDifference = difference / asset.price;
+        const quantityDifference = difference / getNumericPrice(asset);
 
         operations.push({
           assetName: asset.name,
@@ -207,9 +219,9 @@ export default function PortfolioRebalancer() {
       );
       if (asset) {
         if (operation.action === 'buy') {
-          asset.quantity += operation.quantity;
+          asset.quantity = getNumericQuantity(asset) + operation.quantity;
         } else {
-          asset.quantity -= operation.quantity;
+          asset.quantity = getNumericQuantity(asset) - operation.quantity;
         }
       }
     });
@@ -229,11 +241,11 @@ export default function PortfolioRebalancer() {
 
   const operations = calculateRebalance();
   const totalValue = assets.reduce(
-    (sum, asset) => sum + asset.price * asset.quantity,
+    (sum, asset) => sum + getNumericPrice(asset) * getNumericQuantity(asset),
     0
   );
   const totalTargetPercentage = assets.reduce(
-    (sum, asset) => sum + asset.targetPercentage,
+    (sum, asset) => sum + getNumericTargetPercentage(asset),
     0
   );
 

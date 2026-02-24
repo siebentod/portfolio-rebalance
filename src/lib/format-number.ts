@@ -12,7 +12,8 @@ export const filterNumericInput = (value: string): string => {
   if (filtered.length > 0) {
     const [integerPart, decimalPart] = filtered.split('.');
 
-    const cleanedInteger = integerPart.replace(/^0+/, '') || '0';
+    // Удаляем ведущие нули только из целой части, но оставляем один ноль если вся часть состоит из нулей
+    const cleanedInteger = integerPart.replace(/^0+(?!$)/, '') || '0';
 
     filtered =
       decimalPart !== undefined

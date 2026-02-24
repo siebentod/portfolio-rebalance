@@ -4,14 +4,8 @@ import ArrowUp from '../assets/arrow-up.svg?react';
 import { filterNumericInput, formatNumber } from '../lib/format-number';
 import { motion } from 'framer-motion';
 import { onlyOpacityMotion } from '../lib/motion';
-
-interface Asset {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  targetPercentage: number;
-}
+import { type Asset } from '../types';
+import { getNumericPrice, getNumericQuantity, getNumericTargetPercentage } from '../lib/asset-utils';
 
 interface PortfolioTableProps {
   assets: Asset[];
@@ -64,13 +58,13 @@ export default function PortfolioTable({
           </thead>
           <tbody>
             {assets.map((asset) => {
-              const value = asset.price * asset.quantity;
+              const value = getNumericPrice(asset) * getNumericQuantity(asset);
               const currentPercentage =
                 totalValue > 0 ? (value / totalValue) * 100 : 0;
 
               const difference =
-                Math.abs(currentPercentage - asset.targetPercentage) > 0.1
-                  ? currentPercentage - asset.targetPercentage
+                Math.abs(currentPercentage - getNumericTargetPercentage(asset)) > 0.1
+                  ? currentPercentage - getNumericTargetPercentage(asset)
                   : 0;
 
               return (
@@ -173,7 +167,7 @@ export default function PortfolioTable({
       <div className='mt-2 text-sm text-muted-foreground'>
         Сумма целевых процентов:{' '}
         {assets
-          .reduce((sum, asset) => sum + asset.targetPercentage, 0)
+          .reduce((sum, asset) => sum + getNumericTargetPercentage(asset), 0)
           .toFixed(1)}
         %
       </div>
